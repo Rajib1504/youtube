@@ -9,7 +9,7 @@ function getTime(time) {
 // button remove function
 const removeActiveClass = () => {
   const buttons = document.getElementsByClassName("catagoryBtn");
-  console.log(buttons);
+  // console.log(buttons);
   for (let btn of buttons) {
     btn.classList.remove("clickedBtn");
   }
@@ -20,11 +20,12 @@ const loadDetails = async (id) => {
   const url = `https://openapi.programming-hero.com/api/phero-tube/video/${id}`;
   const res = await fetch(url);
   const data = await res.json();
+
   // console.log(data);
   displayVideo(data.video);
 };
 const displayVideo = (videoDes) => {
-  console.log(videoDes);
+  // console.log(videoDes);
   const modalContent = document.getElementById("modalContent");
   modalContent.innerHTML = `
   <img class = "mb-4" src = "${videoDes.thumbnail}"/>
@@ -45,14 +46,14 @@ function getData() {
 }
 function display(data) {
   for (const value of data) {
-    console.log(value);
+    // console.log(value);
     const btnContainer = document.createElement("div");
 
     btnContainer.innerHTML = `
     <button id="btn-${value.category_id}" onclick="loadCatagoryVideo(${value.category_id})" class ="btn catagoryBtn">${value.category}
     </button>`;
 
-    console.log(btnContainer);
+    // console.log(btnContainer);
     const catagory = document.getElementById("catagory");
     btnContainer;
     catagory.append(btnContainer);
@@ -61,8 +62,11 @@ function display(data) {
 getData();
 
 // video section:
-const videosAddHere = () => {
-  fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
+const videosAddHere = (searchText = "") => {
+  // search if emty then its showing us the part where no any value so what we need to do set some default value so then it will not show the empty part(="") this mean true and will show the all vlaue.
+  fetch(
+    `https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchText}`
+  )
     .then((res) => res.json())
     .then((data) => printVideo(data.videos))
     .catch((error) => console.log(error));
@@ -99,9 +103,9 @@ function printVideo(videos) {
   }
   // no video finish here
   for (const video of videos) {
-    console.log(video);
+    // console.log(video);
     const video_id = video.video_id;
-    console.log(video_id);
+    // console.log(video_id);
     const add = document.createElement("div");
     add.innerHTML = `
 <div class="flex flex-col gap-2y">
@@ -144,21 +148,8 @@ function printVideo(videos) {
     videoAdd.append(add);
   }
 }
+document.getElementById("inputSearch").addEventListener("keyup", (event) => {
+  videosAddHere(event.target.value);
+});
 videosAddHere();
-
-// pop up section :
-// const fetchVideoByCatagory = (event, id) => {
-//   console.log(event.target);
-//   event.target.classList.add("bg-red-400");
-
-//   fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
-//     .then((res) => res.json())
-//     .then((data) => printVideo(data.category));
-// };
-
-// const btnStyle = () => {
-//   const activeBtns = document.getElementsByClassName("activeBtn");
-//   for (const btn of activeBtns) {
-//     btn.classList.remove("bg-redd-500");
-//   }
-// };
+loadCatagoryVideo();
