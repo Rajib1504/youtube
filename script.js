@@ -14,6 +14,29 @@ const removeActiveClass = () => {
     btn.classList.remove("clickedBtn");
   }
 };
+// video details section :
+const loadDetails = async (id) => {
+  // console.log(id);
+  const url = `https://openapi.programming-hero.com/api/phero-tube/video/${id}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  // console.log(data);
+  displayVideo(data.video);
+};
+const displayVideo = (videoDes) => {
+  console.log(videoDes);
+  const modalContent = document.getElementById("modalContent");
+  modalContent.innerHTML = `
+  <img class = "mb-4" src = "${videoDes.thumbnail}"/>
+  <hr>
+  <p class ="mt-2">${videoDes.description}</p>
+  `;
+  // for click the btn :way-1
+  // document.getElementById("showModelData").click();
+  // way-2
+  document.getElementById("mymodal").showModal(); //in html file there in onclick the function and then dasiui generate function which is calling the model
+};
+
 // button section:
 function getData() {
   fetch("https://openapi.programming-hero.com/api/phero-tube/categories")
@@ -76,13 +99,17 @@ function printVideo(videos) {
   }
   // no video finish here
   for (const video of videos) {
-    // console.log(video);
+    console.log(video);
+    const video_id = video.video_id;
+    console.log(video_id);
     const add = document.createElement("div");
     add.innerHTML = `
-<div class="flex flex-col gap-2">
-            <figure class ="h-[200px] relative">
+<div class="flex flex-col gap-2y">
+            <figure class ="h-[200px] relative rounded-2xl ">
         <img
-          src="${video.thumbnail}"class ="object-cover h-full w-full pb-2"
+          src="${
+            video.thumbnail
+          }"class ="object-cover h-full w-full pb-2 rounded-lg"
           alt="" />
           ${
             video.others.posted_date?.length == 0
@@ -93,7 +120,7 @@ function printVideo(videos) {
           }     
       </figure>
 <div class =" flex gap-2 justify-start ">
-<img class="rounded-full object-cover w-10 h-10" src ="${
+<img class="rounded-full object-cover w-10 h-10 " src ="${
       video.authors[0].profile_picture
     }  alt ="" />
       <div class="card-body p-0">
@@ -107,6 +134,9 @@ function printVideo(videos) {
          } 
 </div>
     <p>views : ${video.others.views}</p>
+    <p><button onclick = "loadDetails('${
+      video.video_id
+    }')" class = "btn btn-sm btn-error">Details</button></p>
     </div>
     </div>
     </div>
